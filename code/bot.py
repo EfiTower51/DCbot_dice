@@ -1,8 +1,8 @@
 import discord
 from discord.ext import commands
 import os
-
 intents = discord.Intents.all()
+
 import json 
 with open('Dice\GitHub\code\setting.json',mode='r',encoding='UTF-8') as Jfile:
     Fjd = json.load(Jfile)
@@ -42,7 +42,8 @@ async def sechelp(ctx):
     屬於鐵塔的機器人助手！
     
     ◎Minecraft-TowerServer訊息機器人（偶爾出現）
-    ◎設定提醒事項（製作中）/n◎TRPG骰子功能（製作中）
+    ◎設定提醒事項（製作中）
+    ◎TRPG骰子功能（製作中）
     ◎關鍵字罐頭訊息回覆
     
     ——
