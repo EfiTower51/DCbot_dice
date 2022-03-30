@@ -11,8 +11,8 @@ with open('Dice\GitHub\code\setting.json',mode='r',encoding='UTF-8') as Jfile:
 
 bot = discord.Bot(command_prefix='5t-',intents=intents,debug_guilds=[int(Fjd['Tower'])])
 
-master = ['WuYin悟音#5318','艾菲MK#4816']
-
+master = [int(Fjd['WuYin']),int(Fjd['AiFe'])]
+#悟音與艾菲的ID
 
 #Event事件
 
@@ -39,16 +39,18 @@ async def on_ready():
 
 @bot.event
 async def on_message(msg):
-    if msg.content.startswith('http'):
+    if msg.content.startwith('http'):
         await msg.channel.send('沒事放連結幹嘛(´・ω・`)')
 
 @bot.event 
 async def on_message(msg):
     call =['機器人助手','助手']
-    master = [601991076269522970,847840032773242930]
-    if msg.content in call and msg.author.id in master :
-        await msg.channel.send('主人叫我有什麼事嗎(｡•ㅅ•｡)♡')
-
+    if msg.content in call:
+        if msg.author.id in master:
+            await msg.channel.send('主人叫我有什麼事嗎(｡•ㅅ•｡)♡')
+        elif msg.author !=bot.user:
+            await msg.channel.send('哈囉，我是鐵塔的機器人助手(*‘ v`*)')
+        
 
 #Commands指令
 
@@ -76,7 +78,7 @@ async def roll(ctx,fre,dice):
         random.seed()
         result = random.randint(int(fre),int(fre) * int(dice))
         print(result)
-        await ctx.respond(f"擲 {fre} 顆 {dice} 面骰：" & result)
+        await ctx.respond(f'擲 {fre} 顆 {dice} 面骰：' & result)
 
 
 ##TRPG-CoC7e
