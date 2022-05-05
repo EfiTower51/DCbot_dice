@@ -1,20 +1,37 @@
 import os
 import random
 import discord
+import datetime
+import asyncio
 
 intents = discord.Intents.all()
 
 import json 
-with open('Dice\GitHub\code\setting.json',mode='r',encoding='UTF-8') as Jfile:
-    Fjd = json.load(Jfile)
+with open('Dice/GitHub/code/setting.json',mode='r',encoding='UTF-8') as Jfile:
+ Fjd = json.load(Jfile)
 
 
-bot = discord.Bot(command_prefix='5t-',intents=intents,debug_guilds=[int(Fjd['Tower'])])
+bot = discord.Bot(command_prefix='t-',intents=intents,debug_guilds=[int(Fjd['Tower'])])
 
 master = [int(Fjd['WuYin']),int(Fjd['AiFe'])]
 #悟音與艾菲的ID
 
 #Event事件
+
+async def time_task():
+    await bot.wait_until_ready()
+    chaanel = bot.get_channel(950319187119722516)
+    while not bot.is_closed:
+        now_time = datetime.datetime.now().strftime('%H%M')
+        with open('Dice/GitHub/code/setting.json',mode='r',encoding='UTF-8') as Jfile:
+             Fjd = json.load(Jfile)
+        if now_time == Fjd['TIME1']:
+            await chaanel.send('Working!')
+            await asyncio.sleep(2)
+        else:
+            await asyncio.sleep(2)
+            pass
+bg_task = bot.loop.create_task(time_task())
 
 @bot.event
 #機器人之事件
@@ -74,19 +91,17 @@ async def load(ctx,extension):
 
 #骰子
 @bot.slash_command(name="roll",description="來骰顆骰子吧！")
-async def roll(ctx,fre,dice): 
+async def roll(ctx,fre:int,dice:int): 
         random.seed()
-        result = random.randint(int(fre),int(fre) * int(dice))
-        print(result)
-        await ctx.respond(f'擲 {fre} 顆 {dice} 面骰：' & result)
+        result = random.randint(fre,fre * dice)
+        await ctx.respond(f'擲 {fre} 顆 {dice} 面骰：{result}')
 
 
 ##TRPG-CoC7e
 @bot.slash_command(name="7e",description="適用於TRPG當中CoC-7e的技能檢定骰。")
-async def coc7e(ctx,number):
+async def coc7e(ctx,number:int):
     random.seed()
     roll = random.randint(1,100)
-    number=int(number)
     
     if roll == 1:
      await ctx.respond(f"""1D100 ≦ {number}\n檢定結果：{roll}\n哇！！大成功！""")
@@ -117,7 +132,19 @@ async def coc7e(ctx,number):
              await ctx.respond(f"""1D100 ≦ {number}\n檢定結果：{roll}\n你成功了！""")
              return
 
-         
+
+##提醒事項
+@bot.command()
+async def set_time(ctx,time):
+    with open('Dice/GitHub/code/setting.json',mode='r',encoding='UTF-8') as Jfile:
+     Fjd = json.load(Jfile)
+    Fjd['TIME1'] = time
+
+    with open('Dice/GitHub/code/setting.json',mode='w',encoding='UTF-8') as Jfile:
+     json.dump(Fjd,Jfile,indent = 5)
+     
+
+
 
 #for filename in os.listdir('./Dice/GitHub'):
 #    if filename.endswith('.py'):
